@@ -5,35 +5,52 @@ app = Flask(__name__)
 
 app.config['DEBUG'] = True
 
-@app.route("/welcome", methods=['POST'])
+@app.route("/signup", methods=['POST'])
 def welcome_user():
-    valid_username = request.form['username']
-    valid_password = request.form['password']
+    username = request.form['username']
+    password = request.form['password']
     verified_password = request.form['password-verify']
-    valid_email = request.form['email']
+    user_email = request.form['email']
 
+    username_error = ""
+    password_error = ""
+    verification_error = ""
+    matching_error = ""
+    email_error = ""
 
-    if (not valid_username) or (valid_username.strip() == ""):
-        error = "Please enter valid username"
-        return redirect("/?error=" + error)
-
-    if (not valid_password) or (valid_password.strip() == ""):
-        error = "Please enter valid password"
-        return redirect("/?error=" + error)
+    if (not username) or (len(username.strip()) < 3):
+        username_error = "Please enter a valid username"
+        
+    if (not password) or (len(password.strip()) < 8):
+        password_error = "Please enter a valid password"
 
     if (not verified_password) or (verified_password.strip() == ""):
-        error = "Please verify password"
-        return redirect("/?error=" + error)
+        verification_error = "Please verify password"
 
-    if verified_password != valid_password:
-        error = "Passwords do not match"        
-        return redirect("/?error=" + error)
+    if verified_password != password:
+        matching_error = "Passwords do not match"        
 
-    return render_template('welcome.html', username=valid_username)
+    if user_email:
+        if '@' not in user_email or '.' not in user_email:
+            email_error = "Please enter a valid email"
+        if (len(user_email) < 3) or (len(user_email) > 20):
+            email_error = "Please enter a valid email"
+                
+    if username_error == "" and password_error == "" and verification_error == "" and matching_error == "" and email_error == "":
+        return render_template('welcome.html', username=username)
+    else:
+        return render_template('signup.html', username=username, 
+        username_error=username_error,
+        password_error=password_error,
+        verification_error=verification_error,
+        matching_error=matching_error,
+        email_error=email_error,
+        user_email=user_email)
+
+    
 
 @app.route("/")
 def index():
-    encoded_error = request.args.get("error")
-    return render_template('signup.html', error=encoded_error)
+    return render_template('signup.html')
 
 app.run()    

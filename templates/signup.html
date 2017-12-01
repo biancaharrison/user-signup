@@ -3,34 +3,37 @@
 {% block content %}
 <h1>Signup</h1>
 
-<form action="/welcome" method="post">
+<form action="/signup" method="post">
     <table>
         <tr>
             <td><label>Username 
-            <td><input type="text" name="username"/></td>
+            <td><input type="text" name="username" value="{{username}}" /></td>
+            <td><span class = "error">{{username_error}}</span></td>
             </label></td>
         </tr>
         <tr>
             <td><label>Password 
             <td><input type="password" name="password"/></td>
+            <td><span class = "error">{{password_error}}</span></td>
             </label></td> 
         </tr>
         <tr>
             <td><label>Verify Password 
             <td><input type="password" name="password-verify"/></td>
+            <td><span class = "error">{{verification_error}}</span></td>
+            <td><span class = "error">{{matching_error}}</span></td>
             </label></td>
         </tr>
         <tr>
             <td><label>Email (optional) 
-            <td><input type="text" name="email"/></td>
+            <td><input type="text" name="email" value="{{user_email}}" /></td>
+            <td><span class = "error">{{email_error}}</span></td>
             </label></td>
         </tr>
     </table>
     <input type="submit"/>
 </form>
 
-{% if error %} 
-    <p class='error'>{{error}}</p>
-{% endif %}
+
 
 {% endblock %}
